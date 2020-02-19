@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Movie from "./Movie";
 
 const initialMovie = {
     id: "",
@@ -18,7 +17,30 @@ const UpdateMovie = props => {
             return `${item.id}` === props.match.params.id;
         });
         console.log(selectedMovie);
-    }, [])
+        if (selectedMovie) {
+            setMovie(selectedMovie);
+        }
+    }, [props.list, props.match.params.id])
+
+    const handleChange = e => {
+        setMovie({
+            ...movie,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        axios
+            .put(`http://localhost:5000/api/movies/${movie.id}`, movie)
+            .then(res => {
+                props.addToSavedList(res.data);
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 
     return (
         <div>
@@ -46,12 +68,13 @@ const UpdateMovie = props => {
                     value={movie.metascore}
                 />
                 <input
-                    type="string"
+                    type="array"
                     name="stars"
                     onChange={handleChange}
                     placeholder="Movie Stars"
                     value={movie.stars}
                 />
+                <button>Update</button>
             </form>
         </div>
     )
