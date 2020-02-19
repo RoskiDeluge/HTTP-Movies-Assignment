@@ -35,7 +35,9 @@ const UpdateMovie = props => {
             .put(`http://localhost:5000/api/movies/${movie.id}`, movie)
             .then(res => {
                 props.addToSavedList(res.data);
-                console.log(res);
+                // setMovie(initialMovie);
+                // console.log(res);
+                props.history.push("/");
             })
             .catch(err => {
                 console.log(err);
