@@ -29,6 +29,17 @@ const UpdateMovie = props => {
         })
     }
 
+    const handleStarsChange = (index, newValue) => {
+        const updatedStars = [
+            ...movie.stars
+        ];
+        updatedStars[index] = newValue;
+        setMovie({
+            ...movie,
+            stars: updatedStars
+        });
+    }
+
     const handleSubmit = e => {
         e.preventDefault();
         axios
@@ -36,7 +47,7 @@ const UpdateMovie = props => {
             .then(res => {
                 props.addToSavedList(res.data);
                 // setMovie(initialMovie);
-                // console.log(res);
+                console.log(res.data);
                 props.history.push("/");
             })
             .catch(err => {
@@ -69,13 +80,15 @@ const UpdateMovie = props => {
                     placeholder="Movie Metascore"
                     value={movie.metascore}
                 />
-                <input
-                    type="array"
-                    name="stars"
-                    onChange={handleChange}
-                    placeholder="Movie Stars"
-                    value={movie.stars}
-                />
+
+                {movie.stars.map((input, index) => 
+                    <input type="text" 
+                    key={index} 
+                    placeholder="Stars here" 
+                    onChange={e => handleStarsChange(index, e.target.value)}
+                    />
+                    )
+                }
                 <button>Update</button>
             </form>
         </div>
